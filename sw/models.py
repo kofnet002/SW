@@ -23,10 +23,11 @@ class CustomUser(AbstractBaseUser):
     full_name = models.CharField(max_length=255)
     age = models.IntegerField()
     gender = models.CharField(max_length=10)
-    phone_number = models.CharField(max_length=20, unique=True)
+    phone_number = models.CharField(max_length=10, unique=True)
     location = models.CharField(max_length=255)
     national_id = models.CharField(max_length=20, unique=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, default="net.jpg")
+    # profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, default="net.jpg")
+    otp = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

@@ -11,7 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'profile_picture', 'password']
+        # fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'profile_picture', 'password']
+        fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'password']
         # fields = "__all__"
 
     def create(self, validated_data):
@@ -22,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
             phone_number=validated_data['phone_number'],
             location=validated_data['location'],
             national_id=validated_data['national_id'],
-            profile_picture=validated_data['profile_picture'],
+            # profile_picture=validated_data['profile_picture'],
         )
         user.set_password(validated_data['password'])
         user.save()
