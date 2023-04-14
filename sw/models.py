@@ -54,7 +54,7 @@ class Client(models.Model):
     occupation = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.user
+        return self.user.full_name
 
 class Worker(models.Model):
     SKILLS = (
@@ -68,4 +68,4 @@ class Worker(models.Model):
     skill = models.CharField(max_length=50, choices=SKILLS)
 
     def __str__(self):
-        return self.user
+        return self.user.full_name

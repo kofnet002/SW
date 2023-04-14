@@ -39,26 +39,7 @@ class ClientSigninAPIView(APIView):
     def post(self, request):
         serializer = ClientSerializer(data=request.data)
         if serializer.is_valid():
-            obj = serializer.save(commit=False)
-
-            phone = serializer.data.get("user").get("phone_number")
-
-            # Generate a 6-digit OTP
-            otp = str(random.randint(100000, 999999))
-
-            # Send the OTP via Twilio
-            client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-            message = client.messages.create(
-                body=f"Your OTP is: {otp}",
-                from_=settings.TWILIO_PHONE_NUMBER,
-                to=phone
-            )
-
-            serializer.data.get("user").update({"otp":otp})
-            
-            thisdict.update({"color": "red"})
-
-            _otp = serializer.data.g
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
