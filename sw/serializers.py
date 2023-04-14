@@ -24,8 +24,11 @@ class UserSerializer(serializers.ModelSerializer):
         return str(random.randint(100000, 999999))
 
     def create(self, validated_data):
+        
+        # perform operation on validated_data
         otp = self.generate_otp()
         validated_data['otp'] = otp # Modify otp value
+
         user = User.objects.create(
             full_name=validated_data['full_name'],
             age=validated_data['age'],
@@ -50,7 +53,8 @@ class ClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['id', 'user', 'occupation']
+        # fields = ['id', 'user', 'occupation']
+        fields = "__all__"
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')

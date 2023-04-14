@@ -50,7 +50,6 @@ class WorkerSigninAPIView(APIView):
         serializer = WorkerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            print("Phone number:", serializer.data.get("user").get("phone_number"))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
