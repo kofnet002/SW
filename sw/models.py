@@ -52,8 +52,8 @@ class Client(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='client')
     occupation = models.CharField(max_length=50)
 
-    # def __str__(self):
-    #     return user.__username
+    def __str__(self):
+        return self.user
 
 class Worker(models.Model):
     SKILLS = (
@@ -67,4 +67,4 @@ class Worker(models.Model):
     skill = models.CharField(max_length=50, choices=SKILLS)
 
     def __str__(self):
-        return user
+        return self.user
