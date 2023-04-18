@@ -30,6 +30,8 @@ class CustomUser(AbstractBaseUser):
     otp = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+
 
     USERNAME_FIELD = 'phone_number'
 
@@ -69,3 +71,8 @@ class Worker(models.Model):
 
     def __str__(self):
         return self.user.full_name
+
+
+class Booking(models.Model):
+    worker = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="workder")
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user")

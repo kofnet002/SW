@@ -8,6 +8,8 @@ from django.conf import settings
 from .serializers import UserSerializer, ClientSerializer, WorkerSerializer
 from .models import CustomUser, Client, Worker
 import random
+from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 
 class Endpoints(APIView):
@@ -17,6 +19,7 @@ class Endpoints(APIView):
             "/worker-signin",
             "/clients",
             "/workers",
+            "/verify-otp"
         ]
         return Response(endpoint)
 
@@ -54,23 +57,26 @@ class WorkerSigninAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyOTPAPIView(APIView):
-    def post(self, request):
+class VerifyOTP(APIView):
+    def put(self, request):
+        phone_number = request.data.get('phone_number')
         otp = request.data.get('otp')
 
-        # Check if OTP matches the one saved in the session
-        if str(otp) == str(request.session.get('otp')):
-            phone = request.session.get('phone')
-            user_type = request.session.get('user_type')
+        # Query the database for the user with the specified phone number
+        user = get_object_or_404(CustomUser, phone_number=phone_number)
 
-            # Authenticate the user based on user_type
-            user = authenticate(request, phone=phone, user_type=user_type)
+        client_data = Client.objects.get(user=user)
 
-            if user is not None:
-                # Log the user in and return a success response
-                login(request, user)
-                return Response({'success': True})
-            else:
-                return Response({'error': 'Invalid credentials'}, status=401)
-        else:
-            return Response({'error': 'Invalid OTP'}, status=400)
+        serializer = ClientSerializer(data={}, instance=client_data)
+
+        if serializer.is_valid():
+            if otp == user.otp:
+                serializer.validated_data['is_verified'] = True
+                serializer.save()
+                return Response("User is verified", status=status.HTTP_200_OK)
+  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Booking(APIView):
+    def get(self, request):
+        return Response("No booking yet")

@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         # fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'profile_picture', 'password']
-        fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'password']
+        fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'otp', 'is_verified', 'password']
         # fields = "__all__"
 
     # Generate 6 digits otp
@@ -37,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
             location=validated_data['location'],
             national_id=validated_data['national_id'],
             otp=validated_data['otp'],
+            is_verified=validated_data['is_verified'],
             # profile_picture=validated_data['profile_picture'],
         )
 
@@ -55,11 +56,16 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         # fields = ['id', 'user', 'occupation']
         fields = "__all__"
+        extra_kwargs = {
+            'user': {'required': False},
+            'occupation': {'required': False},
+        }
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         client = Client.objects.create(user=user, occupation=validated_data['occupation'])
+
         return client
 
 
