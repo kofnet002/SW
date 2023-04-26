@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Client, Worker, CustomUser
+from .models import Client, Worker, CustomUser, Booking
 import random
 from .otp import MessageHandler
 
@@ -14,9 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'profile_picture', 'password']
         fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'otp', 'is_verified', 'password']
-        # fields = "__all__"
 
     # Generate 6 digits otp
     def generate_otp(self):
@@ -51,16 +49,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ClientSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-
     class Meta:
         model = Client
         # fields = ['id', 'user', 'occupation']
         fields = "__all__"
-        extra_kwargs = {
-            'user': {'required': False},
-            'occupation': {'required': False},
-        }
-
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
@@ -68,16 +60,21 @@ class ClientSerializer(serializers.ModelSerializer):
 
         return client
 
-
 class WorkerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
     class Meta:
         model = Worker
-        fields = ['id', 'user', 'skill']
+        fields = "__all__"
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         worker = Worker.objects.create(user=user, skill=validated_data['skill'])
         return worker
+
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = "__al__"

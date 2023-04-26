@@ -19,7 +19,7 @@ class MessageHandler:
 
     def send_otp_via_message(self):     
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        message = client.messages.create(body=f'Your OTP is : {self.otp}', from_ = f'{settings.TWILIO_PHONE_NUMBER}', to = f'{settings.COUNTRY_CODE}{self.phone_number}')
+        message = client.messages.create(body=f'Your Skill Worker OTP is : {self.otp}', from_ = f'{settings.TWILIO_PHONE_NUMBER}', to = f'{settings.COUNTRY_CODE}{self.phone_number}')
         
     # def send_otp_via_whatsapp(self):     
     #     client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
