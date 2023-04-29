@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Client, Worker, CustomUser, Booking
+from .models import Client, Worker, CustomUser, Service, Book
 import random
 from .otp import MessageHandler
 
@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             location=validated_data['location'],
             national_id=validated_data['national_id'],
             otp=validated_data['otp'],
-            # is_verified=validated_data['is_verified'],
+            is_verified=validated_data['is_verified'],
             # profile_picture=validated_data['profile_picture'],
         )
 
@@ -74,7 +74,12 @@ class WorkerSerializer(serializers.ModelSerializer):
         return worker
 
 
-class BookingSerializer(serializers.ModelSerializer):
+class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Booking
-        fields = "__al__"
+        model = Service
+        fields = "__all__"
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = "__all__"

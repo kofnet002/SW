@@ -75,15 +75,26 @@ class Worker(models.Model):
         return self.user.full_name
 
 
-class Booking(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='bookings')
-    worker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='bookings_worker')
-    service = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
-    notes = models.TextField(blank=True)
+class Service(models.Model):
+    TITLES = (
+        ('Carpentery', 'Carpentery'),
+        ('Electrician', 'Electrician'),
+        ('Caterer', 'Caterer'),
+        ('Laundry', 'Laundry'),
+        ('Plumber', 'Plumber'),
+        ('Mason', 'Mason'),
+    )
+    img = models.ImageField(upload_to='service_imgs/', null=True, blank=True, default="net.jpg")
+    title = models.CharField(max_length=255, choices=TITLES)
+    description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'Booking #{self.id} - {self.service} on {self.date}'
+        return f'{self.title}'
 
+class Book(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    task = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)

@@ -10,9 +10,7 @@ urlpatterns = [
     path('verify-otp/', VerifyOTP.as_view()),
     path('clients/', ListClients.as_view()),
     path('workers/', ListWorkers.as_view()),
-    path('booking/', Booking.as_view()),
-
-    # path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
-    # path('login/', Authenticate.as_view(), name='login'),
+    path('services/', ServiceAPIView.as_view()),
+    path('book/', BookAPIView.as_view()),
 
 ]
