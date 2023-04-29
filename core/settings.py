@@ -84,9 +84,18 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('NAME'),
+        'USER': config('USER'),
+        'HOST': config('HOST'),
+        'PORT': config('PORT'),
+        'PASSWORD': config('PASSWORD')
     }
 }
 
@@ -132,7 +141,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT =  BASE_DIR / 'static/images'
+MEDIA_ROOT = BASE_DIR / 'static/images'
 MEDIA_URL = '/images/'
 
 
@@ -154,8 +163,7 @@ TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = config("TWILIO_PHONE_NUMBER")
 TWILIO_VERIFICATION_SID = config("TWILIO_VERIFICATION_SID")
-COUNTRY_CODE=config('COUNTRY_CODE')
-
+COUNTRY_CODE = config('COUNTRY_CODE')
 
 
 SIMPLE_JWT = {
