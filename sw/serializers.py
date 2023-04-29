@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             location=validated_data['location'],
             national_id=validated_data['national_id'],
             otp=validated_data['otp'],
-            is_verified=validated_data['is_verified'],
+            # is_verified=validated_data['is_verified'],
             # profile_picture=validated_data['profile_picture'],
         )
 

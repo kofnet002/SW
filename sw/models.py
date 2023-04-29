@@ -30,7 +30,7 @@ class CustomUser(AbstractBaseUser):
     otp = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -69,7 +69,7 @@ class Worker(models.Model):
     )
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='worker')
-    skill = models.CharField(max_length=50, choices=SKILLS)
+    skill = models.CharField(max_length=50)
 
     def __str__(self):
         return self.user.full_name

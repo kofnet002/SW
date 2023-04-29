@@ -12,22 +12,27 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import IsAuthenticated
+
 
 
 
 class Endpoints(APIView):
     def get(self, request):
         endpoint = [
-            "/client-signin",
-            "/worker-signin",
+            "/client-register",
+            "/worker-register",
             "/clients",
             "/workers",
-            "/verify-otp"
+            "/verify-otp",
+            "/token/", # login
         ]
         return Response(endpoint)
 
 
 class ListClients(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         clients = Client.objects.all()
         serializer = ClientSerializer(clients, many=True)
@@ -35,6 +40,8 @@ class ListClients(APIView):
 
 
 class ListWorkers(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         workers = Worker.objects.all()
         serializer = WorkerSerializer(workers, many=True)
@@ -60,7 +67,7 @@ class WorkerSigninAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class VerifyOTP(APIView):
+class VerifyOTP(APIView):
     def post(self, request):
         phone_number = request.data.get('phone_number')
         otp = request.data.get('otp')
