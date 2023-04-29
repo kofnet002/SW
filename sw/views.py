@@ -5,14 +5,17 @@ from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from twilio.rest import Client
 from django.conf import settings
-from .serializers import UserSerializer, ClientSerializer, WorkerSerializer, ServiceSerializer
-from .models import CustomUser, Client, Worker, Service
+from .serializers import UserSerializer, ClientSerializer, WorkerSerializer, ServiceSerializer,  BookSerializer
+from .models import CustomUser, Client, Worker, Service, Book
 import random
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated
+from django.forms.models import model_to_dict
+from django.contrib.auth.models import Group
+
 
 
 
@@ -26,7 +29,8 @@ class Endpoints(APIView):
             "/clients",
             "/workers",
             "/verify-otp",
-            "/services"
+            "/services",
+            "/book"
         ]
         return Response(endpoint)
 
@@ -98,13 +102,45 @@ class ServiceAPIView(APIView):
         serializer = ServiceSerializer(service, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class BookAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
         user = request.user
         task = request.data.get('task')
+       
+        data = {
+            "user":  user.id,
+            "task": task
+        }
+        serializer = BookSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-        return Response("testing", status=status.HTTP_200_OK)
+class BookAPIView(APIView):
+    def get(self, request):
+        if request.user.has_perm('sw.view_book'):
+            bookings = Book.objects.all()
+            serializer = BookSerializer(bookings, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+
+
+
+
+# =========================== WORKER CLASSES =========================
+class GetBookAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+            if request.user.has_perm('sw.view_book'):
+                bookings = Book.objects.all()
+                serializer = BookSerializer(bookings, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+

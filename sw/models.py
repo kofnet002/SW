@@ -26,7 +26,7 @@ class CustomUser(AbstractBaseUser):
     phone_number = models.CharField(max_length=10, unique=True)
     location = models.CharField(max_length=255, null=True)
     national_id = models.CharField(max_length=20, unique=True)
-    # profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, default="net.jpg")
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, default="net.jpg")
     otp = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -94,7 +94,10 @@ class Service(models.Model):
         return f'{self.title}'
 
 class Book(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     task = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.task}'

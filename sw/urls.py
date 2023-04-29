@@ -13,4 +13,8 @@ urlpatterns = [
     path('services/', ServiceAPIView.as_view()),
     path('book/', BookAPIView.as_view()),
 
+
+    #================== WORKER ==================
+    path('mybookings/', GetBookAPIView.as_view()),
+
 ]

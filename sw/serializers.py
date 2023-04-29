@@ -14,8 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'otp', 'is_verified', 'password']
-
+        fields = ['id', 'full_name', 'age', 'gender', 'phone_number', 'location', 'national_id', 'otp', 'is_verified','profile_picture', 'password']
+        extra_kwargs ={
+            "password":{
+                "write_only": True,
+            }
+        }
     # Generate 6 digits otp
     def generate_otp(self):
         """Generates a random six-digit OTP"""
@@ -28,6 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['otp'] = otp # Modify otp value
 
         user = User.objects.create(
+            id=validated_data['id'],
             full_name=validated_data['full_name'],
             age=validated_data['age'],
             gender=validated_data['gender'],
@@ -35,8 +40,8 @@ class UserSerializer(serializers.ModelSerializer):
             location=validated_data['location'],
             national_id=validated_data['national_id'],
             otp=validated_data['otp'],
-            is_verified=validated_data['is_verified'],
-            # profile_picture=validated_data['profile_picture'],
+            # is_verified=validated_data['is_verified'],
+            profile_picture=validated_data['profile_picture'],
         )
 
         # Send OTP to user
@@ -80,6 +85,10 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class BookSerializer(serializers.ModelSerializer):
+    # user = UserSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Book
         fields = "__all__"
+        depth=1
