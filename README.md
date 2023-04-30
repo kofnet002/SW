@@ -1,5 +1,7 @@
 # SKILL WORKER -- SW
 
+#### ALL THE NECESSARY ENVIRONMENTS ARE PROVIDED IN THE FINAL REPORT
+
 ### HOW TO RUN THE APPLICATION 
 1. Git clone ```git clone https://github.com/kofnet002/SW.git```
 
