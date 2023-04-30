@@ -85,7 +85,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Book

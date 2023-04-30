@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,13 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = [
-    "https://sw.up.railway.app",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://sw.up.railway.app",
-]
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
 AUTH_USER_MODEL = 'sw.CustomUser'
 
@@ -95,10 +90,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
@@ -108,7 +103,16 @@ DATABASES = {
     #     'PORT': 5432,
     #     'PASSWORD': 'network123'
     # }
+    'default': dj_database_url.config(default='postgresql://postgres:ETNZPrRDRSxrRjni1elQ@containers.railway.app:6502/railway', conn_max_age=600, ssl_require=True)
+
 }
+
+# DATABASES['default'] = dj_database_url.config(
+#     postgresql://postgres:ETNZPrRDRSxrRjni1elQ@containers.railway.app:6502/railway
+#     conn_max_age=600,
+#     conn_health_checks=True,
+# )
+
 
 
 # Password validation
