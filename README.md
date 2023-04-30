@@ -21,12 +21,7 @@ d. TWILIO_PHONE_NUMBER = "will be provided in the report"
 
 e. COUNTRY_CODE = "+233"
 
-5. The application is configured with PostgreSQL. To configure:
-a. Open the "settings.py" file in the project root directory, "core" folder.
-
-b. Scroll to line 94 and make the necessary changes with your postgresql database
-    + change "NAME", "PASSWORD" to your postgresql database credentials.
-    + The remaining are constants
+5. The application is configured with PostgreSQL from [railway platform](https://railway.app)
 
 6. Time to make migrations, ```python manage.py makemigrations```
 
