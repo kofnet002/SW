@@ -32,7 +32,6 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['otp'] = otp # Modify otp value
 
         user = User.objects.create(
-            id=validated_data['id'],
             full_name=validated_data['full_name'],
             age=validated_data['age'],
             gender=validated_data['gender'],
@@ -41,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
             national_id=validated_data['national_id'],
             otp=validated_data['otp'],
             # is_verified=validated_data['is_verified'],
-            profile_picture=validated_data['profile_picture'],
+            # profile_picture=validated_data['profile_picture'],
         )
 
         # Send OTP to user
@@ -92,3 +91,28 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = "__all__"
         depth=1
+
+
+class VerifyOTPSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=10)
+    otp = serializers.CharField(max_length=6)
+
+    def validate(self, data):
+        phone_number = data.get('phone_number')
+        otp = data.get('otp')
+
+        # Check if the phone number exists in the database
+        try:
+            user = CustomUser.objects.get(phone_number=phone_number)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError('Phone number not found')
+
+        # Check if the OTP matches
+        if otp != str(user.otp):
+            raise serializers.ValidationError('Incorrect OTP')
+
+        # Update the is_verified field to True
+        user.is_verified = True
+        user.save()
+
+        return data
