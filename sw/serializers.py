@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
         # Send OTP to user
-        messagehandler=MessageHandler(user.phone_number, otp).send_otp_via_message()
+        # messagehandler=MessageHandler(user.phone_number, otp).send_otp_via_message()
 
         user.set_password(validated_data['password'])
         user.save()
