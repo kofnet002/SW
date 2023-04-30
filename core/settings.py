@@ -28,9 +28,10 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://sw.up.railway.app']
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
+DATABASE_URL = "postgresql://postgres:ETNZPrRDRSxrRjni1elQ@containers.railway.app:6502/railway"
 
 AUTH_USER_MODEL = 'sw.CustomUser'
 
@@ -89,30 +90,26 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+# 'default': {
+#     'ENGINE': 'django.db.backends.sqlite3',
+#     'NAME': BASE_DIR / 'db.sqlite3',
+# }
+
+# 'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'sw',
+#     'USER': 'postgres',
+#     'HOST': 'localhost',
+#     'PORT': 5432,
+#     'PASSWORD': 'network123'
+# }
+
+# }
+
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'sw',
-    #     'USER': 'postgres',
-    #     'HOST': 'localhost',
-    #     'PORT': 5432,
-    #     'PASSWORD': 'network123'
-    # }
-    'default': dj_database_url.config(default='postgresql://postgres:ETNZPrRDRSxrRjni1elQ@containers.railway.app:6502/railway', conn_max_age=600, ssl_require=True)
-
+    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 }
-
-# DATABASES['default'] = dj_database_url.config(
-#     postgresql://postgres:ETNZPrRDRSxrRjni1elQ@containers.railway.app:6502/railway
-#     conn_max_age=600,
-#     conn_health_checks=True,
-# )
-
 
 
 # Password validation
