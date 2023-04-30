@@ -40,11 +40,11 @@ class UserSerializer(serializers.ModelSerializer):
             national_id=validated_data['national_id'],
             otp=validated_data['otp'],
             # is_verified=validated_data['is_verified'],
-            # profile_picture=validated_data['profile_picture'],
+            profile_picture=validated_data['profile_picture'],
         )
 
         # Send OTP to user
-        # messagehandler=MessageHandler(user.phone_number, otp).send_otp_via_message()
+        messagehandler=MessageHandler(user.phone_number, otp).send_otp_via_message()
 
         user.set_password(validated_data['password'])
         user.save()
@@ -84,8 +84,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class BookSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = UserSerializer(read_only=True)
+    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Book

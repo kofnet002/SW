@@ -32,6 +32,7 @@ class Endpoints(APIView):
         return Response(endpoint)
 
 
+# =========================== CLIENT VIEWS =========================
 class ListClients(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -68,30 +69,6 @@ class WorkerSigninAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class VerifyOTP(APIView):
-    def put(self, request):
-        phone_number = request.data.get('phone_number')
-        otp = request.data.get('otp')
-
-        # Query the database for the user with the specified phone number
-        user = get_object_or_404(CustomUser, phone_number=phone_number)
-        # _user = get_object_or_404(CustomUser, phone_number=phone_number)
-
-        data = request.data.copy()
-        user_model = model_to_dict(user)
-        print(user_model)
-
-        serializer = ClientSerializer(instance=user, data=user_model)
-
-        if serializer.is_valid():
-            if otp == user.otp:
-                serializer.validated_data['is_verified'] = True
-                serializer.save(user=request.user)  # set the user field
-                serializer.save()
-                return Response("User is verified", status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class VerifyOTP(APIView):
     def post(self, request):
         serializer = VerifyOTPSerializer(data=request.data)
@@ -125,21 +102,38 @@ class ServiceAPIView(APIView):
 
 
 class BookAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
-        if request.user.has_perm('sw.view_book'):
-            bookings = Book.objects.all()
-            serializer = BookSerializer(bookings, many=True)
+        data = Book.objects.all()
+        serializer = BookSerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        user = request.user
+        task = request.data.get('task')
+
+        data = {
+            'user': user.id,
+            'task': task
+        }
+
+
+        serializer = BookSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# =========================== WORKER CLASSES =========================
+# =========================== WORKER VIEWS =========================
 class GetBookAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        if request.user.has_perm('sw.view_book'):
-            bookings = Book.objects.all()
-            serializer = BookSerializer(bookings, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+        bookings = Book.objects.all()
+        serializer = BookSerializer(bookings, many=True)
+        _all = [d.get('user') for d in serializer.data]
+        print(_all)
+        return Response(serializer.data, status=status.HTTP_200_OK)
