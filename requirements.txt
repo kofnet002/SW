@@ -8,7 +8,7 @@ attrs==22.2.0
 certifi==2022.12.7
 charset-normalizer==3.1.0
 dj-database-url==2.0.0
-Django==4.1.6
+Django==4.1.10
 django-cors-headers==3.13.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
